@@ -41,11 +41,19 @@ public class ShopServiceImpl implements ShopService {
         return true;
     }
 
+    /**
+     * Calculates the final price of the ticket and adds the newly purchased
+     * ticket in the Ticket Repository.
+     *
+     * @param ticket as Ticket
+     * @return true if purchase was successful
+     */
     @Override
     public boolean buyTicket(Ticket ticket) {
         if (ticket == null) {
             return false;
         }
+        calculatePrice(ticket);
         ticketRepo.create(ticket);
         return true;
     }
@@ -75,8 +83,8 @@ public class ShopServiceImpl implements ShopService {
     /**
      * Calculates an Itinerary's final price.
      *
-     * CREDIT_CARD: -10% to basic price BUSINESS: -10% to basic price
-     * INDIVIDUAL: +20% to basic price The price changes are cumulative.
+     * CREDIT_CARD: -10% to basic price. BUSINESS: -10% to basic price.
+     * INDIVIDUAL: +20% to basic price. (the price changes are cumulative)
      *
      * @param ticket as Ticket
      */

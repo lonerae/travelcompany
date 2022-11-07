@@ -1,5 +1,7 @@
 package com.travelcompany.eshop;
 
+import com.travelcompany.eshop.enums.PaymentMethod;
+import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
@@ -26,8 +28,20 @@ public class Eshop {
         dataImport.importTickets();
 
         shopService.calculatePrice();
+
+        //Will implement better presentation
+        //For now, check JsonPrint.java
         System.out.println(shopService.searchCustomer());
         System.out.println(shopService.searchItinerary());
         System.out.println(shopService.searchTicket());
+
+        //Ticket purchasing scenario
+        Ticket ticket = new Ticket();
+        ticket.setCustomerId(1);
+        ticket.setItineraryId(2);
+        ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+        shopService.buyTicket(ticket); //payment amount not specified, will be calculated by the application
+        //basicPrice : 420, INDIVIDUAL : +20%, CREDIT_CARD: -10% -> expected finalPrice : 462
+        System.out.println(ticket.getPaymentAmount());
     }
 }
