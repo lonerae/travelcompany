@@ -1,11 +1,14 @@
 package com.travelcompany.eshop.services;
 
+import com.travelcompany.eshop.enums.CustomerCategory;
+import com.travelcompany.eshop.enums.PaymentMethod;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
 import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ShopServiceImpl implements ShopService {
@@ -18,8 +21,8 @@ public class ShopServiceImpl implements ShopService {
         this.customerRepo = customerRepo;
         this.itineraryRepo = itineraryRepo;
         this.ticketRepo = ticketRepo;
-    }    
-    
+    }
+
     @Override
     public boolean addCustomer(Customer customer) {
         if (customer == null) {
@@ -61,7 +64,44 @@ public class ShopServiceImpl implements ShopService {
     public List<Ticket> searchTicket() {
         return ticketRepo.read();
     }
-    
-    
-    
+
+    @Override
+    public void calculatePrice() {
+        for (Ticket ticket : ticketRepo.read()) {
+            calculatePrice(ticket);
+        }
+    }
+
+    /**
+     * Calculates an Itinerary's final price.
+     *
+     * CREDIT_CARD: -10% to basic price BUSINESS: -10% to basic price
+     * INDIVIDUAL: +20% to basic price The price changes are cumulative.
+     *
+     * @param ticket as Ticket
+     */
+    @Override
+    public void calculatePrice(Ticket ticket) {
+        Customer customer = customerRepo.read(ticket.getCustomerId());
+        Itinerary itinerary = itineraryRepo.read(ticket.getItineraryId());
+        PaymentMethod paymentMethod = ticket.getPaymentMethod();
+
+        BigDecimal basicPrice = itinerary.getPrice();
+
+        double percent = 0;
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            percent -= 10;
+        }
+        if (customer.getCategory().equals(CustomerCategory.BUSINESS)) {
+            percent -= 10;
+        } else {
+            percent += 20;
+        }
+
+        BigDecimal priceDifference = basicPrice.multiply(BigDecimal.valueOf(percent / 100));
+        BigDecimal finalPrice = basicPrice.add(priceDifference);
+
+        ticket.setPaymentAmount(finalPrice);
+    }
+
 }

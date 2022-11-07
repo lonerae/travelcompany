@@ -2,8 +2,10 @@ package com.travelcompany.eshop.util;
 
 import com.travelcompany.eshop.enums.AirportCode;
 import com.travelcompany.eshop.enums.CustomerCategory;
+import com.travelcompany.eshop.enums.PaymentMethod;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
+import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
@@ -23,7 +25,7 @@ public class DataImport {
     }
 
     public void importCustomers() {
-        
+
         {
             Customer customer = new Customer();
             customer.setName("Maria Iordanou");
@@ -202,17 +204,79 @@ public class DataImport {
     }
 
     public void importTickets() {
-        
-//        1 2 Cash
-//        2 3 Cash
-//        3 3 Credit Card
-//        2 4 Credit Card
-//        3 4 Cash
-//        4 7 Credit Card
-//        5 7 Credit Card
-//        2 9 Cash
-//        1 3 Cash
-        
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(1);
+            ticket.setItineraryId(2);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(2);
+            ticket.setItineraryId(3);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(3);
+            ticket.setItineraryId(3);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(2);
+            ticket.setItineraryId(4);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(3);
+            ticket.setItineraryId(4);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(4);
+            ticket.setItineraryId(7);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(5);
+            ticket.setItineraryId(7);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(2);
+            ticket.setItineraryId(9);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(1);
+            ticket.setItineraryId(3);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+        }
+
     }
 
 }

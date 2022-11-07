@@ -11,5 +11,5 @@ public abstract class PersistentClass {
     public void setId(int id) {
         this.id = id;
     }
-    
+
 }

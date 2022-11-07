@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Itinerary extends PersistentClass {
-    
+
     public static final String AIRLINE = "SkyLines";
-    
+
     private AirportCode departure;
     private AirportCode destination;
     private Date departureDate;
@@ -44,5 +44,5 @@ public class Itinerary extends PersistentClass {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-    
+
 }

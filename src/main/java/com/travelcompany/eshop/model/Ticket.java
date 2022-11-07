@@ -4,7 +4,7 @@ import com.travelcompany.eshop.enums.PaymentMethod;
 import java.math.BigDecimal;
 
 public class Ticket extends PersistentClass {
-    
+
     private int customerId;
     private int itineraryId;
     private PaymentMethod paymentMethod;
@@ -41,5 +41,5 @@ public class Ticket extends PersistentClass {
     public void setPaymentAmount(BigDecimal paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
-    
+
 }

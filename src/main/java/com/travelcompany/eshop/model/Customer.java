@@ -3,7 +3,7 @@ package com.travelcompany.eshop.model;
 import com.travelcompany.eshop.enums.CustomerCategory;
 
 public class Customer extends PersistentClass {
-    
+
     private String name;
     private String email;
     private String address;
@@ -49,5 +49,5 @@ public class Customer extends PersistentClass {
     public void setCategory(CustomerCategory category) {
         this.category = category;
     }
-    
+
 }

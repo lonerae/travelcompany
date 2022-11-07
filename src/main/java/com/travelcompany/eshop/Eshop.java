@@ -13,18 +13,21 @@ import com.travelcompany.eshop.util.DataImport;
 public class Eshop {
 
     public static void main(String[] args) {
-        
+
         CustomerRepository customerRepo = new CustomerRepositoryImpl();
         ItineraryRepository itineraryRepo = new ItineraryRepositoryImpl();
         TicketRepository ticketRepo = new TicketRepositoryImpl();
-        
+
         ShopService shopService = new ShopServiceImpl(customerRepo, itineraryRepo, ticketRepo);
         DataImport dataImport = new DataImport(customerRepo, itineraryRepo, ticketRepo);
-        
+
         dataImport.importCustomers();
         dataImport.importItineraries();
-        
+        dataImport.importTickets();
+
+        shopService.calculatePrice();
         System.out.println(shopService.searchCustomer());
         System.out.println(shopService.searchItinerary());
+        System.out.println(shopService.searchTicket());
     }
 }

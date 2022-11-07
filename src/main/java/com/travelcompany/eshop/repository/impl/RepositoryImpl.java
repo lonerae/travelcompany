@@ -8,12 +8,12 @@ import java.util.List;
 public abstract class RepositoryImpl<T extends PersistentClass> implements Repository<T> {
 
     private final List<T> list;
-    private int index;
+    private int index = 1;
 
     public RepositoryImpl() {
         this.list = new ArrayList<>();
     }
-    
+
     @Override
     public int create(T object) {
         object.setId(index++);
@@ -45,5 +45,5 @@ public abstract class RepositoryImpl<T extends PersistentClass> implements Repos
         }
         return false;
     }
-    
+
 }
