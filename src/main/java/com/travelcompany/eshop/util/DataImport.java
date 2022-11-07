@@ -207,10 +207,38 @@ public class DataImport {
 
         {
             Ticket ticket = new Ticket();
+            ticket.setCustomerId(0);
+            ticket.setItineraryId(1);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
             ticket.setCustomerId(1);
             ticket.setItineraryId(2);
             ticket.setPaymentMethod(PaymentMethod.CASH);
             ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(2);
+            ticket.setItineraryId(2);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(1);
+            ticket.setItineraryId(3);
+            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
 
         {
@@ -219,62 +247,43 @@ public class DataImport {
             ticket.setItineraryId(3);
             ticket.setPaymentMethod(PaymentMethod.CASH);
             ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
 
         {
             Ticket ticket = new Ticket();
             ticket.setCustomerId(3);
-            ticket.setItineraryId(3);
+            ticket.setItineraryId(6);
             ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
             ticketRepo.create(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(2);
-            ticket.setItineraryId(4);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(3);
-            ticket.setItineraryId(4);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
 
         {
             Ticket ticket = new Ticket();
             ticket.setCustomerId(4);
-            ticket.setItineraryId(7);
+            ticket.setItineraryId(6);
             ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
             ticketRepo.create(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(5);
-            ticket.setItineraryId(7);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(2);
-            ticket.setItineraryId(9);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
 
         {
             Ticket ticket = new Ticket();
             ticket.setCustomerId(1);
-            ticket.setItineraryId(3);
+            ticket.setItineraryId(8);
             ticket.setPaymentMethod(PaymentMethod.CASH);
             ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
+        }
+
+        {
+            Ticket ticket = new Ticket();
+            ticket.setCustomerId(0);
+            ticket.setItineraryId(2);
+            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticketRepo.create(ticket);
+            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
 
     }

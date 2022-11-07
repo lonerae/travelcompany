@@ -3,6 +3,7 @@ package com.travelcompany.eshop.services;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
 import com.travelcompany.eshop.model.Ticket;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ShopService {
@@ -22,4 +23,8 @@ public interface ShopService {
     void calculatePrice();
 
     void calculatePrice(Ticket ticket);
+
+    List<Integer> ticketsPerCustomer();
+
+    List<BigDecimal> costPerCustomer();
 }

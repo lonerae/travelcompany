@@ -9,6 +9,7 @@ import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopServiceImpl implements ShopService {
@@ -55,6 +56,7 @@ public class ShopServiceImpl implements ShopService {
         }
         calculatePrice(ticket);
         ticketRepo.create(ticket);
+        customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         return true;
     }
 
@@ -73,6 +75,9 @@ public class ShopServiceImpl implements ShopService {
         return ticketRepo.read();
     }
 
+    /**
+     * For price calculation of imported tickets.
+     */
     @Override
     public void calculatePrice() {
         for (Ticket ticket : ticketRepo.read()) {
@@ -110,6 +115,20 @@ public class ShopServiceImpl implements ShopService {
         BigDecimal finalPrice = basicPrice.add(priceDifference);
 
         ticket.setPaymentAmount(finalPrice);
+    }
+
+    @Override
+    public List<Integer> ticketsPerCustomer() {
+        List<Integer> ticketsPerCustomerList = new ArrayList<>();
+        for (Customer customer : customerRepo.read()) {
+            ticketsPerCustomerList.add(customer.getTicketList().size());
+        }
+        return ticketsPerCustomerList;
+    }
+
+    @Override
+    public List<BigDecimal> costPerCustomer() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

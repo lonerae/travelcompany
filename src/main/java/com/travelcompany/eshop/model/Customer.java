@@ -1,6 +1,8 @@
 package com.travelcompany.eshop.model;
 
 import com.travelcompany.eshop.enums.CustomerCategory;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer extends PersistentClass {
 
@@ -9,6 +11,11 @@ public class Customer extends PersistentClass {
     private String address;
     private String nationality;
     private CustomerCategory category;
+    private final List<Ticket> ticketList;
+
+    public Customer() {
+        this.ticketList = new ArrayList<>();
+    }
 
     public String getName() {
         return name;
@@ -48,6 +55,10 @@ public class Customer extends PersistentClass {
 
     public void setCategory(CustomerCategory category) {
         this.category = category;
+    }
+
+    public List<Ticket> getTicketList() {
+        return ticketList;
     }
 
 }

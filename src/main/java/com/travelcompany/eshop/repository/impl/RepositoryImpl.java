@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class RepositoryImpl<T extends PersistentClass> implements Repository<T> {
 
     private final List<T> list;
-    private int index = 1;
+    private int index;
 
     public RepositoryImpl() {
         this.list = new ArrayList<>();

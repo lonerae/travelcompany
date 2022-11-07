@@ -11,6 +11,7 @@ import com.travelcompany.eshop.repository.impl.TicketRepositoryImpl;
 import com.travelcompany.eshop.services.ShopService;
 import com.travelcompany.eshop.services.ShopServiceImpl;
 import com.travelcompany.eshop.util.DataImport;
+import java.util.List;
 
 public class Eshop {
 
@@ -31,17 +32,26 @@ public class Eshop {
 
         //Will implement better presentation
         //For now, check JsonPrint.java
+        System.out.println("---------------------");
+        System.out.println("IMPORTED DATA PRINTING");
         System.out.println(shopService.searchCustomer());
         System.out.println(shopService.searchItinerary());
         System.out.println(shopService.searchTicket());
-
-        //Ticket purchasing scenario
+        System.out.println("---------------------");
+        System.out.println("TICKET PURCHASING SCENARIO");
         Ticket ticket = new Ticket();
-        ticket.setCustomerId(1);
-        ticket.setItineraryId(2);
+        ticket.setCustomerId(0);
+        ticket.setItineraryId(1);
         ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
         shopService.buyTicket(ticket); //payment amount not specified, will be calculated by the application
         //basicPrice : 420, INDIVIDUAL : +20%, CREDIT_CARD: -10% -> expected finalPrice : 462
         System.out.println(ticket.getPaymentAmount());
+        System.out.println("---------------------");
+        System.out.println("NUMBER OF TICKETS AND TICKET COST PER CUSTOMER");
+        List<Integer> ticketsPerCustomerList = shopService.ticketsPerCustomer();
+        int id = 0;
+        for (Integer numberOfTickets : ticketsPerCustomerList) {
+            System.out.println(customerRepo.read(id++).getName() + " : " + numberOfTickets);
+        }
     }
 }
