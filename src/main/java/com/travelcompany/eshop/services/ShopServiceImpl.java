@@ -1,5 +1,9 @@
 package com.travelcompany.eshop.services;
 
+import com.travelcompany.eshop.dto.StatisticalDtoItineraries;
+import com.travelcompany.eshop.dto.StatisticalDtoTotals;
+import com.travelcompany.eshop.dto.StatisticalDtoZeroTicketCustomers;
+import com.travelcompany.eshop.enums.AirportCode;
 import com.travelcompany.eshop.enums.CustomerCategory;
 import com.travelcompany.eshop.enums.PaymentMethod;
 import com.travelcompany.eshop.model.Customer;
@@ -9,22 +13,21 @@ import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShopServiceImpl implements ShopService {
-
+    
     private final CustomerRepository customerRepo;
     private final ItineraryRepository itineraryRepo;
     private final TicketRepository ticketRepo;
-
+    
     public ShopServiceImpl(CustomerRepository customerRepo, ItineraryRepository itineraryRepo, TicketRepository ticketRepo) {
         this.customerRepo = customerRepo;
         this.itineraryRepo = itineraryRepo;
         this.ticketRepo = ticketRepo;
     }
-
+    
     @Override
     public boolean addCustomer(Customer customer) {
         if (customer == null) {
@@ -33,7 +36,7 @@ public class ShopServiceImpl implements ShopService {
         customerRepo.create(customer);
         return true;
     }
-
+    
     @Override
     public boolean addItinerary(Itinerary itinerary) {
         if (itinerary == null) {
@@ -60,12 +63,12 @@ public class ShopServiceImpl implements ShopService {
         customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         return true;
     }
-
+    
     @Override
     public List<Customer> searchCustomer() {
         return customerRepo.read();
     }
-
+    
     @Override
     public Customer searchCustomer(int customerId) {
         return customerRepo.read(customerId);
@@ -75,17 +78,17 @@ public class ShopServiceImpl implements ShopService {
     public List<Itinerary> searchItinerary() {
         return itineraryRepo.read();
     }
-
+    
     @Override
     public Itinerary searchItinerary(int itineraryId) {
         return itineraryRepo.read(itineraryId);
     }
-
+    
     @Override
     public List<Ticket> searchTicket() {
         return ticketRepo.read();
     }
-
+    
     @Override
     public Ticket searchTicket(int ticketId) {
         return ticketRepo.read(ticketId);
@@ -114,9 +117,9 @@ public class ShopServiceImpl implements ShopService {
         Customer customer = customerRepo.read(ticket.getCustomerId());
         Itinerary itinerary = itineraryRepo.read(ticket.getItineraryId());
         PaymentMethod paymentMethod = ticket.getPaymentMethod();
-
+        
         BigDecimal basicPrice = itinerary.getPrice();
-
+        
         double percent = 0;
         if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
             percent -= 10;
@@ -126,33 +129,61 @@ public class ShopServiceImpl implements ShopService {
         } else {
             percent += 20;
         }
-
+        
         BigDecimal priceDifference = basicPrice.multiply(BigDecimal.valueOf(percent / 100));
         BigDecimal finalPrice = basicPrice.add(priceDifference);
-
+        
         ticket.setPaymentAmount(finalPrice);
     }
-
+    
     @Override
-    public List<Integer> ticketsPerCustomer() {
-        List<Integer> ticketsPerCustomerList = new ArrayList<>();
-        for (Customer customer : customerRepo.read()) {
-            ticketsPerCustomerList.add(customer.getTicketList().size());
+    public StatisticalDtoTotals calculateTotals() {
+        StatisticalDtoTotals total = new StatisticalDtoTotals();
+        total.setTotalNumberOfTickets(ticketRepo.read().size());
+        BigDecimal totalCost = BigDecimal.ZERO;
+        for (Ticket ticket : ticketRepo.read()) {
+            totalCost = totalCost.add(ticket.getPaymentAmount());
         }
-        return ticketsPerCustomerList;
+        total.setTotalCostOfTickets(totalCost);
+        return total;
     }
-
+    
     @Override
-    public List<BigDecimal> costPerCustomer() {
-        List<BigDecimal> costPerCustomerList = new ArrayList<>();
-        for (Customer customer : customerRepo.read()) {
-            BigDecimal sum = BigDecimal.ZERO;
-            for (Ticket ticket : customer.getTicketList()) {
-                sum = sum.add(ticket.getPaymentAmount());
+    public List<StatisticalDtoItineraries> calculateItinerariesPerAirport() {
+        List<StatisticalDtoItineraries> airportList = new ArrayList<>();
+        for (AirportCode airportCode : AirportCode.values()) {
+            StatisticalDtoItineraries dto = new StatisticalDtoItineraries();
+            dto.setAirportCode(airportCode);
+            int departureCount = 0;
+            int destinationCount = 0;
+            for (Itinerary itinerary : itineraryRepo.read()) {
+                if (itinerary.getDeparture().equals(airportCode)) {
+                    departureCount++;
+                }
+                if (itinerary.getDestination().equals(airportCode)) {
+                    destinationCount++;
+                }
             }
-            costPerCustomerList.add(sum);
+            dto.setDepartureCount(departureCount);
+            dto.setDestinationCount(destinationCount);
+            airportList.add(dto);
         }
-        return costPerCustomerList;
+        return airportList;
     }
 
+    @Override
+    public List<StatisticalDtoZeroTicketCustomers> calculateZeroTicketCustomers() {
+        List<StatisticalDtoZeroTicketCustomers> dtoList = new ArrayList<>();
+        for (Customer customer : customerRepo.read()) {
+            if (customer.getTicketList().isEmpty()) {
+                StatisticalDtoZeroTicketCustomers dto = new StatisticalDtoZeroTicketCustomers();
+                dto.setName(customer.getName());
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
+    }
+    
+    
+    
 }

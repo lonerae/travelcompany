@@ -10,6 +10,8 @@ import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DataImport {
@@ -18,6 +20,42 @@ public class DataImport {
     private final ItineraryRepository itineraryRepo;
     private final TicketRepository ticketRepo;
 
+    private final static String[] CUSTOMERS = {
+        "Maria Iordanou, miordanou@mail.com, Athens, Greek, INDIVIDUAL",
+        "Dimitrios Dimitriou, ddimitriou@mail.com, Athens, Greek, INDIVIDUAL",
+        "Ioannis Ioannou, iioannou@mail.com, Athens, Greek, BUSINESS",
+        "Antonio Molinari, amolinari@mail.com, Milan, Italian, INDIVIDUAL",
+        "Frederico Rossi, frossi@mail.com, Milan, Italian, INDIVIDUAL",
+        "Mario Conti, mconti@mail.com, Rome, Italian, BUSINESS",
+        "Nathan Martin, nmartin@mail.com, Lyon, French, BUSINESS",
+        "Enzo Collin, ecollin@mail.com, Lyon, French, INDIVIDUAL",
+        "Frederic Michel, fmichel@mail.com, Athens, French, INDIVIDUAL"
+    };
+
+    private final static String[] ITINERARIES = {
+        "ATH, PAR, 2022-02-22 13:35, 300",
+        "ATH, LON, 2022-02-22 13:40, 420",
+        "ATH, AMS, 2022-02-22 13:45, 280",
+        "ATH, PAR, 2022-02-22 14:20, 310",
+        "ATH, DUB, 2022-02-22 14:35, 880",
+        "ATH, FRA, 2022-02-22 14:55, 380",
+        "ATH, FRA, 2022-02-22 15:35, 350",
+        "ATH, MEX, 2022-02-22 16:00, 1020",
+        "ATH, DUB, 2022-02-22 16:35, 770"
+    };
+
+    private final static String[] TICKETS = {
+        "0, 1, CASH",
+        "1, 2, CASH",
+        "2, 2, CREDIT_CARD",
+        "1, 3, CREDIT_CARD",
+        "2, 3, CASH",
+        "3, 6, CREDIT_CARD",
+        "4, 6, CREDIT_CARD",
+        "1, 8, CASH",
+        "0, 2, CASH"
+    };
+
     public DataImport(CustomerRepository customerRepo, ItineraryRepository itineraryRepo, TicketRepository ticketRepo) {
         this.customerRepo = customerRepo;
         this.itineraryRepo = itineraryRepo;
@@ -25,267 +63,50 @@ public class DataImport {
     }
 
     public void importCustomers() {
-
-        {
+        for (String customerString : CUSTOMERS) {
+            String[] details = customerString.split(",");
             Customer customer = new Customer();
-            customer.setName("Maria Iordanou");
-            customer.setEmail("miordanou@mail.com");
-            customer.setAddress("Athens");
-            customer.setNationality("Greek");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
+            customer.setName(details[0].trim());
+            customer.setEmail(details[1].trim());
+            customer.setAddress(details[2].trim());
+            customer.setNationality(details[3].trim());
+            customer.setCategory(CustomerCategory.valueOf(details[4].trim()));
             customerRepo.create(customer);
         }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Dimitrios Dimitriou");
-            customer.setEmail("ddimitriou@mail.com");
-            customer.setAddress("Athens");
-            customer.setNationality("Greek");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Ioannis Ioannou");
-            customer.setEmail("iioannou@mail.com");
-            customer.setAddress("Athens");
-            customer.setNationality("Greek");
-            customer.setCategory(CustomerCategory.BUSINESS);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Antonio Molinari");
-            customer.setEmail("amolinari@mail.com");
-            customer.setAddress("Milan");
-            customer.setNationality("Italian");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Frederico Rossi");
-            customer.setEmail("frossi@mail.com");
-            customer.setAddress("Milan");
-            customer.setNationality("Italian");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Mario Conti");
-            customer.setEmail("mconti@mail.com");
-            customer.setAddress("Rome");
-            customer.setNationality("Italian");
-            customer.setCategory(CustomerCategory.BUSINESS);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Nathan Martin");
-            customer.setEmail("nmartin@mail.com");
-            customer.setAddress("Lyon");
-            customer.setNationality("French");
-            customer.setCategory(CustomerCategory.BUSINESS);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Enzo Collin");
-            customer.setEmail("ecollin@mail.com");
-            customer.setAddress("Lyon");
-            customer.setNationality("French");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
-            customerRepo.create(customer);
-        }
-
-        {
-            Customer customer = new Customer();
-            customer.setName("Frederic Michel");
-            customer.setEmail("fmichel@mail.com");
-            customer.setAddress("Athens");
-            customer.setNationality("French");
-            customer.setCategory(CustomerCategory.INDIVIDUAL);
-            customerRepo.create(customer);
-        }
-
     }
 
     public void importItineraries() {
-
-        {
+        for (String itineraryString : ITINERARIES) {
+            String[] details = itineraryString.split(",");
             Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.PAR);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 13, 35));
-            itinerary.setPrice(new BigDecimal("300"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.LON);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 13, 40));
-            itinerary.setPrice(new BigDecimal("420"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.AMS);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 13, 45));
-            itinerary.setPrice(new BigDecimal("280"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.PAR);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 14, 20));
-            itinerary.setPrice(new BigDecimal("310"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.DUB);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 14, 35));
-            itinerary.setPrice(new BigDecimal("880"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.FRA);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 14, 55));
-            itinerary.setPrice(new BigDecimal("380"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.FRA);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 15, 35));
-            itinerary.setPrice(new BigDecimal("350"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.MEX);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 16, 0));
-            itinerary.setPrice(new BigDecimal("1020"));
-            itineraryRepo.create(itinerary);
-        }
-
-        {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDeparture(AirportCode.ATH);
-            itinerary.setDestination(AirportCode.DUB);
-            itinerary.setDepartureDate(new Date(2022, 2, 22, 16, 35));
-            itinerary.setPrice(new BigDecimal("770"));
+            itinerary.setDeparture(AirportCode.valueOf(details[0].trim()));
+            itinerary.setDestination(AirportCode.valueOf(details[1].trim()));
+            String[] dateAndTimeParts = details[2].trim().split(" ");
+            String[] dateParts = dateAndTimeParts[0].split("-");
+            String[] timeParts = dateAndTimeParts[1].split(":");
+            itinerary.setDepartureDate(new Date(
+                    Integer.parseInt(dateParts[0]) - 1900,
+                    Integer.parseInt(dateParts[1]) - 1,
+                    Integer.parseInt(dateParts[2]),
+                    Integer.parseInt(timeParts[0]),
+                    Integer.parseInt(timeParts[1])
+            ));
+            itinerary.setPrice(BigDecimal.valueOf(Double.parseDouble(details[3].trim())));
             itineraryRepo.create(itinerary);
         }
 
     }
 
     public void importTickets() {
-
-        {
+        for (String ticketString : TICKETS) {
+            String[] details = ticketString.split(",");
             Ticket ticket = new Ticket();
-            ticket.setCustomerId(0);
-            ticket.setItineraryId(1);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
+            ticket.setCustomerId(Integer.parseInt(details[0].trim()));
+            ticket.setItineraryId(Integer.parseInt(details[1].trim()));
+            ticket.setPaymentMethod(PaymentMethod.valueOf(details[2].trim()));
             ticketRepo.create(ticket);
             customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
         }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(1);
-            ticket.setItineraryId(2);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(2);
-            ticket.setItineraryId(2);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(1);
-            ticket.setItineraryId(3);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(2);
-            ticket.setItineraryId(3);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(3);
-            ticket.setItineraryId(6);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(4);
-            ticket.setItineraryId(6);
-            ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(1);
-            ticket.setItineraryId(8);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
-        {
-            Ticket ticket = new Ticket();
-            ticket.setCustomerId(0);
-            ticket.setItineraryId(2);
-            ticket.setPaymentMethod(PaymentMethod.CASH);
-            ticketRepo.create(ticket);
-            customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        }
-
     }
 
 }

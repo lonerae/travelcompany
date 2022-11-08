@@ -1,5 +1,6 @@
 package com.travelcompany.eshop;
 
+import com.google.gson.GsonBuilder;
 import com.travelcompany.eshop.enums.PaymentMethod;
 import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
@@ -31,13 +32,28 @@ public class Eshop {
 
         shopService.calculatePrice();
 
-        //Will implement better presentation
-        //For now, check JsonPrint.java
         System.out.println("---------------------");
         System.out.println("IMPORTED DATA PRINTING");
-        System.out.println(shopService.searchCustomer());
-        System.out.println(shopService.searchItinerary());
-        System.out.println(shopService.searchTicket());
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchCustomer()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchItinerary()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchTicket()));
+
+        System.out.println("---------------------");
+        System.out.println("TOTAL NUMBER OF TICKETS AND TICKET COST");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateTotals()));
+
+        System.out.println("---------------------");
+        System.out.println("TOTAL ITINERARIES PER DEPARTURE AND DESTINATION");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateItinerariesPerAirport()));
+        
+        System.out.println("---------------------");
+        System.out.println("CUSTOMERS WITH MAX TICKETS AND MAX COST");
+
+        
+        System.out.println("---------------------");
+        System.out.println("CUSTOMERS WITH ZERO TICKETS");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateZeroTicketCustomers()));
+
         System.out.println("---------------------");
         System.out.println("TICKET PURCHASING SCENARIO");
         Ticket ticket = new Ticket();
@@ -47,20 +63,5 @@ public class Eshop {
         shopService.buyTicket(ticket); //payment amount not specified, will be calculated by the application
         //basicPrice : 420, INDIVIDUAL : +20%, CREDIT_CARD: -10% -> expected finalPrice : 462
         System.out.println(ticket.getPaymentAmount());
-        System.out.println("---------------------");
-        System.out.println("NUMBER OF TICKETS AND TICKET COST PER CUSTOMER");
-        List<Integer> ticketsPerCustomerList = shopService.ticketsPerCustomer();
-        List<BigDecimal> costPerCustomerList = shopService.costPerCustomer();
-        int customerNumber = shopService.searchCustomer().size();
-        for (int i = 0; i < customerNumber; i++) {
-            System.out.println(customerRepo.read(i).getName());
-            System.out.println("    Number of Tickets : " + ticketsPerCustomerList.get(i));
-            System.out.println("    Total Cost of Tickets : " + costPerCustomerList.get(i));
-        }
-        //Check validity for customer 0
-        for (Ticket t : shopService.searchCustomer(0).getTicketList()) {
-            System.out.println(t.getPaymentAmount());
-        }
-        
     }
 }
