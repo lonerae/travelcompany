@@ -11,6 +11,7 @@ import com.travelcompany.eshop.repository.impl.TicketRepositoryImpl;
 import com.travelcompany.eshop.services.ShopService;
 import com.travelcompany.eshop.services.ShopServiceImpl;
 import com.travelcompany.eshop.util.DataImport;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Eshop {
@@ -49,9 +50,17 @@ public class Eshop {
         System.out.println("---------------------");
         System.out.println("NUMBER OF TICKETS AND TICKET COST PER CUSTOMER");
         List<Integer> ticketsPerCustomerList = shopService.ticketsPerCustomer();
-        int id = 0;
-        for (Integer numberOfTickets : ticketsPerCustomerList) {
-            System.out.println(customerRepo.read(id++).getName() + " : " + numberOfTickets);
+        List<BigDecimal> costPerCustomerList = shopService.costPerCustomer();
+        int customerNumber = shopService.searchCustomer().size();
+        for (int i = 0; i < customerNumber; i++) {
+            System.out.println(customerRepo.read(i).getName());
+            System.out.println("    Number of Tickets : " + ticketsPerCustomerList.get(i));
+            System.out.println("    Total Cost of Tickets : " + costPerCustomerList.get(i));
         }
+        //Check validity for customer 0
+        for (Ticket t : shopService.searchCustomer(0).getTicketList()) {
+            System.out.println(t.getPaymentAmount());
+        }
+        
     }
 }

@@ -15,10 +15,16 @@ public interface ShopService {
     boolean buyTicket(Ticket ticket);
 
     List<Customer> searchCustomer();
+    
+    Customer searchCustomer(int customerId);
 
     List<Itinerary> searchItinerary();
+    
+    Itinerary searchItinerary(int itineraryId);
 
     List<Ticket> searchTicket();
+    
+    Ticket searchTicket(int ticketId);
 
     void calculatePrice();
 

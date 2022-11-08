@@ -9,6 +9,7 @@ import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,13 +67,28 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public Customer searchCustomer(int customerId) {
+        return customerRepo.read(customerId);
+    }
+    
+    @Override
     public List<Itinerary> searchItinerary() {
         return itineraryRepo.read();
     }
 
     @Override
+    public Itinerary searchItinerary(int itineraryId) {
+        return itineraryRepo.read(itineraryId);
+    }
+
+    @Override
     public List<Ticket> searchTicket() {
         return ticketRepo.read();
+    }
+
+    @Override
+    public Ticket searchTicket(int ticketId) {
+        return ticketRepo.read(ticketId);
     }
 
     /**
@@ -128,7 +144,15 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public List<BigDecimal> costPerCustomer() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<BigDecimal> costPerCustomerList = new ArrayList<>();
+        for (Customer customer : customerRepo.read()) {
+            BigDecimal sum = BigDecimal.ZERO;
+            for (Ticket ticket : customer.getTicketList()) {
+                sum = sum.add(ticket.getPaymentAmount());
+            }
+            costPerCustomerList.add(sum);
+        }
+        return costPerCustomerList;
     }
 
 }
