@@ -1,6 +1,8 @@
 package com.travelcompany.eshop.services;
 
-import com.travelcompany.eshop.dto.StatisticalDtoItineraries;
+import com.travelcompany.eshop.dto.StatisticalDtoAirports;
+import com.travelcompany.eshop.dto.StatisticalDtoMaxCostCustomers;
+import com.travelcompany.eshop.dto.StatisticalDtoMaxTicketCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoTotals;
 import com.travelcompany.eshop.dto.StatisticalDtoZeroTicketCustomers;
 import com.travelcompany.eshop.enums.AirportCode;
@@ -147,12 +149,56 @@ public class ShopServiceImpl implements ShopService {
         total.setTotalCostOfTickets(totalCost);
         return total;
     }
+
+    @Override
+    public List<StatisticalDtoMaxTicketCustomers> calculateMaxTicketCustomers() {
+        List<StatisticalDtoMaxTicketCustomers> dtoList = new ArrayList<>();
+        int maxTickets = -1;
+        for (Customer customer : customerRepo.read()) {
+            StatisticalDtoMaxTicketCustomers dto = new StatisticalDtoMaxTicketCustomers();
+            if (customer.getTicketList().size() >= maxTickets) {
+                if (customer.getTicketList().size() > maxTickets) {
+                    maxTickets = customer.getTicketList().size();
+                    dtoList.clear();
+                }
+                dto.setName(customer.getName());
+                dto.setMaxTickets(maxTickets);
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
+    }
+
+    @Override
+    public List<StatisticalDtoMaxCostCustomers> calculateMaxCostCustomers() {
+        List<StatisticalDtoMaxCostCustomers> dtoList = new ArrayList<>();
+        BigDecimal maxCost = BigDecimal.valueOf(-1);
+        for (Customer customer : customerRepo.read()) {
+            StatisticalDtoMaxCostCustomers dto = new StatisticalDtoMaxCostCustomers();
+            BigDecimal currentCost = BigDecimal.ZERO;
+            for (Ticket ticket : customer.getTicketList()) {
+                currentCost = currentCost.add(ticket.getPaymentAmount());
+            }
+            if (currentCost.compareTo(maxCost) >= 0) {
+                if (currentCost.compareTo(maxCost) > 0) {
+                    maxCost = currentCost;
+                    dtoList.clear();
+                }
+                dto.setName(customer.getName());
+                dto.setMaxCost(maxCost);
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
+    }
+    
+    
     
     @Override
-    public List<StatisticalDtoItineraries> calculateItinerariesPerAirport() {
-        List<StatisticalDtoItineraries> airportList = new ArrayList<>();
+    public List<StatisticalDtoAirports> calculateItinerariesPerAirport() {
+        List<StatisticalDtoAirports> airportList = new ArrayList<>();
         for (AirportCode airportCode : AirportCode.values()) {
-            StatisticalDtoItineraries dto = new StatisticalDtoItineraries();
+            StatisticalDtoAirports dto = new StatisticalDtoAirports();
             dto.setAirportCode(airportCode);
             int departureCount = 0;
             int destinationCount = 0;

@@ -2,7 +2,7 @@ package com.travelcompany.eshop.dto;
 
 import com.travelcompany.eshop.enums.AirportCode;
 
-public class StatisticalDtoItineraries {
+public class StatisticalDtoAirports {
 
     private AirportCode airportCode;
     private int departureCount;

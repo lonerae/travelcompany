@@ -1,6 +1,8 @@
 package com.travelcompany.eshop.services;
 
-import com.travelcompany.eshop.dto.StatisticalDtoItineraries;
+import com.travelcompany.eshop.dto.StatisticalDtoAirports;
+import com.travelcompany.eshop.dto.StatisticalDtoMaxCostCustomers;
+import com.travelcompany.eshop.dto.StatisticalDtoMaxTicketCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoTotals;
 import com.travelcompany.eshop.dto.StatisticalDtoZeroTicketCustomers;
 import com.travelcompany.eshop.model.Customer;
@@ -34,7 +36,11 @@ public interface ShopService {
 
     StatisticalDtoTotals calculateTotals();
 
-    List<StatisticalDtoItineraries> calculateItinerariesPerAirport();
+    List<StatisticalDtoAirports> calculateItinerariesPerAirport();
+    
+    List<StatisticalDtoMaxTicketCustomers> calculateMaxTicketCustomers();
+    
+    List<StatisticalDtoMaxCostCustomers> calculateMaxCostCustomers();
     
     List<StatisticalDtoZeroTicketCustomers> calculateZeroTicketCustomers();
 }
