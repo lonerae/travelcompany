@@ -4,10 +4,16 @@ import com.travelcompany.eshop.dto.StatisticalDtoAirports;
 import com.travelcompany.eshop.dto.StatisticalDtoMaxCostCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoMaxTicketCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoTotals;
-import com.travelcompany.eshop.dto.StatisticalDtoZeroTicketCustomers;
+import com.travelcompany.eshop.dto.StatisticalDtoNoTicketCustomers;
 import com.travelcompany.eshop.enums.AirportCode;
 import com.travelcompany.eshop.enums.CustomerCategory;
 import com.travelcompany.eshop.enums.PaymentMethod;
+import com.travelcompany.eshop.exceptions.CustomerException;
+import com.travelcompany.eshop.exceptions.CustomerExceptionCodes;
+import com.travelcompany.eshop.exceptions.ItineraryException;
+import com.travelcompany.eshop.exceptions.ItineraryExceptionCodes;
+import com.travelcompany.eshop.exceptions.TicketException;
+import com.travelcompany.eshop.exceptions.TicketExceptionCodes;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
 import com.travelcompany.eshop.model.Ticket;
@@ -19,33 +25,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShopServiceImpl implements ShopService {
-    
+
     private final CustomerRepository customerRepo;
     private final ItineraryRepository itineraryRepo;
     private final TicketRepository ticketRepo;
-    
+
     public ShopServiceImpl(CustomerRepository customerRepo, ItineraryRepository itineraryRepo, TicketRepository ticketRepo) {
         this.customerRepo = customerRepo;
         this.itineraryRepo = itineraryRepo;
         this.ticketRepo = ticketRepo;
     }
-    
+
+    /**
+     *
+     * @param customer
+     * @throws CustomerException
+     */
     @Override
-    public boolean addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) throws CustomerException {
         if (customer == null) {
-            return false;
+            throw new CustomerException(CustomerExceptionCodes.CUSTOMER_IS_NULL);
+        }
+        if (customer.getEmail().matches("(.*)@travelcompany.com")) {
+            throw new CustomerException(CustomerExceptionCodes.CUSTOMER_INVALID_EMAIL);
         }
         customerRepo.create(customer);
-        return true;
     }
-    
+
     @Override
-    public boolean addItinerary(Itinerary itinerary) {
+    public void addItinerary(Itinerary itinerary) throws ItineraryException {
         if (itinerary == null) {
-            return false;
+            throw new ItineraryException(ItineraryExceptionCodes.ITINERARY_IS_NULL);
+        }
+        boolean departureAirportFlag = false;
+        boolean destinationAirportFlag = false;
+        for (AirportCode airportCode : AirportCode.values()) {
+            if (itinerary.getDeparture().equals(airportCode)) {
+                departureAirportFlag = true;
+            }
+            if (itinerary.getDestination().equals(airportCode)) {
+                destinationAirportFlag = true;
+            }
+        }
+        if (!departureAirportFlag) {
+            throw new ItineraryException(ItineraryExceptionCodes.INVALID_DEPARTURE_CODE);
+        }
+        if (!destinationAirportFlag) {
+            throw new ItineraryException(ItineraryExceptionCodes.INVALID_DESTINATION_CODE);
         }
         itineraryRepo.create(itinerary);
-        return true;
     }
 
     /**
@@ -53,44 +81,49 @@ public class ShopServiceImpl implements ShopService {
      * ticket in the Ticket Repository.
      *
      * @param ticket as Ticket
-     * @return true if purchase was successful
+     * @throws TicketException
      */
     @Override
-    public boolean buyTicket(Ticket ticket) {
+    public void buyTicket(Ticket ticket) throws TicketException {
         if (ticket == null) {
-            return false;
+            throw new TicketException(TicketExceptionCodes.TICKET_IS_NULL);
+        }
+        if (ticket.getCustomerId() < 0 || ticket.getCustomerId() >= ticketRepo.read().size()) {
+            throw new TicketException(TicketExceptionCodes.TICKET_CUSTOMER_IS_INVALID);
+        }
+        if (ticket.getItineraryId() < 0 || ticket.getItineraryId() >= ticketRepo.read().size()) {
+            throw new TicketException(TicketExceptionCodes.TICKET_ITINERARY_IS_INVALID);
         }
         calculatePrice(ticket);
         ticketRepo.create(ticket);
         customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
-        return true;
     }
-    
+
     @Override
     public List<Customer> searchCustomer() {
         return customerRepo.read();
     }
-    
+
     @Override
     public Customer searchCustomer(int customerId) {
         return customerRepo.read(customerId);
     }
-    
+
     @Override
     public List<Itinerary> searchItinerary() {
         return itineraryRepo.read();
     }
-    
+
     @Override
     public Itinerary searchItinerary(int itineraryId) {
         return itineraryRepo.read(itineraryId);
     }
-    
+
     @Override
     public List<Ticket> searchTicket() {
         return ticketRepo.read();
     }
-    
+
     @Override
     public Ticket searchTicket(int ticketId) {
         return ticketRepo.read(ticketId);
@@ -119,9 +152,9 @@ public class ShopServiceImpl implements ShopService {
         Customer customer = customerRepo.read(ticket.getCustomerId());
         Itinerary itinerary = itineraryRepo.read(ticket.getItineraryId());
         PaymentMethod paymentMethod = ticket.getPaymentMethod();
-        
+
         BigDecimal basicPrice = itinerary.getPrice();
-        
+
         double percent = 0;
         if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
             percent -= 10;
@@ -131,13 +164,13 @@ public class ShopServiceImpl implements ShopService {
         } else {
             percent += 20;
         }
-        
+
         BigDecimal priceDifference = basicPrice.multiply(BigDecimal.valueOf(percent / 100));
         BigDecimal finalPrice = basicPrice.add(priceDifference);
-        
+
         ticket.setPaymentAmount(finalPrice);
     }
-    
+
     @Override
     public StatisticalDtoTotals calculateTotals() {
         StatisticalDtoTotals total = new StatisticalDtoTotals();
@@ -191,22 +224,20 @@ public class ShopServiceImpl implements ShopService {
         }
         return dtoList;
     }
-    
-    
-    
+
     @Override
-    public List<StatisticalDtoAirports> calculateItinerariesPerAirport() {
+    public List<StatisticalDtoAirports> calculateOfferedItinerariesPerAirport() {
         List<StatisticalDtoAirports> airportList = new ArrayList<>();
         for (AirportCode airportCode : AirportCode.values()) {
             StatisticalDtoAirports dto = new StatisticalDtoAirports();
             dto.setAirportCode(airportCode);
             int departureCount = 0;
             int destinationCount = 0;
-            for (Itinerary itinerary : itineraryRepo.read()) {
-                if (itinerary.getDeparture().equals(airportCode)) {
+            for (Ticket ticket : ticketRepo.read()) {
+                if (itineraryRepo.read(ticket.getItineraryId()).getDeparture().equals(airportCode)) {
                     departureCount++;
                 }
-                if (itinerary.getDestination().equals(airportCode)) {
+                if (itineraryRepo.read(ticket.getItineraryId()).getDestination().equals(airportCode)) {
                     destinationCount++;
                 }
             }
@@ -218,18 +249,16 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<StatisticalDtoZeroTicketCustomers> calculateZeroTicketCustomers() {
-        List<StatisticalDtoZeroTicketCustomers> dtoList = new ArrayList<>();
+    public List<StatisticalDtoNoTicketCustomers> calculateZeroTicketCustomers() {
+        List<StatisticalDtoNoTicketCustomers> dtoList = new ArrayList<>();
         for (Customer customer : customerRepo.read()) {
             if (customer.getTicketList().isEmpty()) {
-                StatisticalDtoZeroTicketCustomers dto = new StatisticalDtoZeroTicketCustomers();
+                StatisticalDtoNoTicketCustomers dto = new StatisticalDtoNoTicketCustomers();
                 dto.setName(customer.getName());
                 dtoList.add(dto);
             }
         }
         return dtoList;
     }
-    
-    
-    
+
 }

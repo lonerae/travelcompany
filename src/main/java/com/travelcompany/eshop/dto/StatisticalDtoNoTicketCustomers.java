@@ -1,6 +1,6 @@
 package com.travelcompany.eshop.dto;
 
-public class StatisticalDtoZeroTicketCustomers {
+public class StatisticalDtoNoTicketCustomers {
     private String name;
 
     public String getName() {

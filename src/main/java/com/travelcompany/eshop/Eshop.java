@@ -1,6 +1,14 @@
 package com.travelcompany.eshop;
 
 import com.google.gson.GsonBuilder;
+import com.travelcompany.eshop.enums.AirportCode;
+import com.travelcompany.eshop.enums.CustomerCategory;
+import com.travelcompany.eshop.enums.PaymentMethod;
+import com.travelcompany.eshop.exceptions.CustomerException;
+import com.travelcompany.eshop.exceptions.TicketException;
+import com.travelcompany.eshop.model.Customer;
+import com.travelcompany.eshop.model.Itinerary;
+import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
@@ -26,6 +34,7 @@ public class Eshop {
         dataImport.importItineraries();
         dataImport.importTickets();
 
+        //to calculate the payment amount for every imported ticket
         shopService.calculatePrice();
 
 //        System.out.println("---------------------");
@@ -40,7 +49,7 @@ public class Eshop {
 
         System.out.println("---------------------");
         System.out.println("TOTAL ITINERARIES PER DEPARTURE AND DESTINATION");
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateItinerariesPerAirport()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateOfferedItinerariesPerAirport()));
         
         System.out.println("---------------------");
         System.out.println("CUSTOMERS WITH MAX TICKETS AND MAX COST");

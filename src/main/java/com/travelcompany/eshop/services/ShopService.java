@@ -4,7 +4,10 @@ import com.travelcompany.eshop.dto.StatisticalDtoAirports;
 import com.travelcompany.eshop.dto.StatisticalDtoMaxCostCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoMaxTicketCustomers;
 import com.travelcompany.eshop.dto.StatisticalDtoTotals;
-import com.travelcompany.eshop.dto.StatisticalDtoZeroTicketCustomers;
+import com.travelcompany.eshop.dto.StatisticalDtoNoTicketCustomers;
+import com.travelcompany.eshop.exceptions.CustomerException;
+import com.travelcompany.eshop.exceptions.ItineraryException;
+import com.travelcompany.eshop.exceptions.TicketException;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
 import com.travelcompany.eshop.model.Ticket;
@@ -12,11 +15,11 @@ import java.util.List;
 
 public interface ShopService {
 
-    boolean addCustomer(Customer customer);
+    void addCustomer(Customer customer) throws CustomerException;
 
-    boolean addItinerary(Itinerary itinerary);
+    void addItinerary(Itinerary itinerary) throws ItineraryException;
 
-    boolean buyTicket(Ticket ticket);
+    void buyTicket(Ticket ticket) throws TicketException;
 
     List<Customer> searchCustomer();
 
@@ -36,11 +39,11 @@ public interface ShopService {
 
     StatisticalDtoTotals calculateTotals();
 
-    List<StatisticalDtoAirports> calculateItinerariesPerAirport();
+    List<StatisticalDtoAirports> calculateOfferedItinerariesPerAirport();
     
     List<StatisticalDtoMaxTicketCustomers> calculateMaxTicketCustomers();
     
     List<StatisticalDtoMaxCostCustomers> calculateMaxCostCustomers();
     
-    List<StatisticalDtoZeroTicketCustomers> calculateZeroTicketCustomers();
+    List<StatisticalDtoNoTicketCustomers> calculateZeroTicketCustomers();
 }
