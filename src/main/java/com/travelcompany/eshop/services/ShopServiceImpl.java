@@ -46,7 +46,7 @@ public class ShopServiceImpl implements ShopService {
         if (customer == null) {
             throw new CustomerException(CustomerExceptionCodes.CUSTOMER_IS_NULL);
         }
-        if (customer.getEmail().matches("(.*)@travelcompany.com")) {
+        if (customer.getEmail().contains("@travelcompany.com")) {
             throw new CustomerException(CustomerExceptionCodes.CUSTOMER_INVALID_EMAIL);
         }
         customerRepo.create(customer);

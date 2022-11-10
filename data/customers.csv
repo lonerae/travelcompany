@@ -1,0 +1,10 @@
+id,name,email,address,nationality,customerCategory
+0,Maria Iordanou,miordanou@mail.com,Athens,Greek,INDIVIDUAL
+1,Dimitrios Dimitriou,ddimitriou@mail.com,Athens,Greek,INDIVIDUAL
+2,Ioannis Ioannou,iioannou@mail.com,Athens,Greek,BUSINESS
+3,Antonio Molinari,amolinari@mail.com,Milan,Italian,INDIVIDUAL
+4,Frederico Rossi,frossi@mail.com,Milan,Italian,INDIVIDUAL
+5,Mario Conti,mconti@mail.com,Rome,Italian,BUSINESS
+6,Nathan Martin,nmartin@mail.com,Lyon,French,BUSINESS
+7,Enzo Collin,ecollin@mail.com,Lyon,French,INDIVIDUAL
+8,Frederic Michel,fmichel@mail.com,Athens,French,INDIVIDUAL
