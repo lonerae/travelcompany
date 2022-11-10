@@ -78,7 +78,7 @@ public class Eshop {
             ex.printStackTrace();
         }
 
-//      After CSV file is saved to keep initial data intact (testing purposes)
+//      After CSV file is saved, to keep initial data intact (testing purposes)
         System.out.println("---------------------");
         System.out.println("TICKET PURCHASING SCENARIO");
         Ticket ticket = new Ticket();
@@ -87,14 +87,16 @@ public class Eshop {
         ticket.setPaymentMethod(PaymentMethod.CREDIT_CARD);
         try {
             shopService.buyTicket(ticket); //payment amount not specified, will be calculated by the application
+            System.out.println("PURCHASE SUCCESSFUL");
         } catch (TicketException ex) {
             System.out.println(ex.getMessage());
         }
         //basicPrice : 420, INDIVIDUAL : +20%, CREDIT_CARD: -10% -> expected finalPrice : 462
-        System.out.println("Customer: " + shopService.searchCustomer(
-                ticket.getCustomerId()).getName()
-                + ", Final Price: "
-                + ticket.getPaymentAmount()
+        System.out.println("Customer: " + shopService.searchCustomer(ticket.getCustomerId()).getName()
+                + "\nDeparts from: " + shopService.searchItinerary(ticket.getItineraryId()).getDeparture()
+                + "\nArrives to: " + shopService.searchItinerary(ticket.getItineraryId()).getDestination()
+                + "\nOn: " + shopService.searchItinerary(ticket.getItineraryId()).getDepartureDate()
+                + "\nFinal Price: " + ticket.getPaymentAmount() + "€"
         );
     }
 }
