@@ -15,6 +15,7 @@ After execution, the application will print
 - the name(s) of the customer(s) with most tickets purchased and the number of those tickets
 - the name(s) of the customer(s) with the largest cost of purchase and the amount of that cost and
 - the name(s) of the customer(s) who have not purchased any tickets yet
+
 in that order and as JSON.
 
 ## Requirements
