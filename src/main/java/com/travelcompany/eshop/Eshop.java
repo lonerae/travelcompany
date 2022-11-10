@@ -33,7 +33,7 @@ public class Eshop {
             ioService.readItineraryFromCsv("data/itineraries.csv");
             ioService.readTicketFromCsv("data/tickets.csv");
         } catch (CustomerException | ItineraryException | TicketException ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
 
         shopService.calculatePrice();
@@ -75,7 +75,7 @@ public class Eshop {
             ioService.saveItineraryToCsv("data/itineraries.csv");
             ioService.saveTicketToCsv("data/tickets.csv");
         } catch (CustomerException | ItineraryException | TicketException ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
 
 //      After CSV file is saved, to keep initial data intact (testing purposes)
