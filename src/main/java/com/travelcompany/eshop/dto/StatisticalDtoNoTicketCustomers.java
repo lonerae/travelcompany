@@ -1,6 +1,7 @@
 package com.travelcompany.eshop.dto;
 
 public class StatisticalDtoNoTicketCustomers {
+
     private String name;
 
     public String getName() {
@@ -10,5 +11,5 @@ public class StatisticalDtoNoTicketCustomers {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

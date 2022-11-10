@@ -36,15 +36,10 @@ public class ShopServiceImpl implements ShopService {
         this.ticketRepo = ticketRepo;
     }
 
-    /**
-     *
-     * @param customer
-     * @throws CustomerException
-     */
     @Override
     public void addCustomer(Customer customer) throws CustomerException {
         if (customer == null) {
-            throw new CustomerException(CustomerExceptionCodes.CUSTOMER_IS_NULL);
+            throw new CustomerException(CustomerExceptionCodes.NULL);
         }
         if (customer.getEmail().contains("@travelcompany.com")) {
             throw new CustomerException(CustomerExceptionCodes.CUSTOMER_INVALID_EMAIL);
@@ -55,7 +50,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void addItinerary(Itinerary itinerary) throws ItineraryException {
         if (itinerary == null) {
-            throw new ItineraryException(ItineraryExceptionCodes.ITINERARY_IS_NULL);
+            throw new ItineraryException(ItineraryExceptionCodes.NULL);
         }
         boolean departureAirportFlag = false;
         boolean destinationAirportFlag = false;
@@ -76,17 +71,10 @@ public class ShopServiceImpl implements ShopService {
         itineraryRepo.create(itinerary);
     }
 
-    /**
-     * Calculates the final price of the ticket and adds the newly purchased
-     * ticket in the Ticket Repository.
-     *
-     * @param ticket as Ticket
-     * @throws TicketException
-     */
     @Override
     public void buyTicket(Ticket ticket) throws TicketException {
         if (ticket == null) {
-            throw new TicketException(TicketExceptionCodes.TICKET_IS_NULL);
+            throw new TicketException(TicketExceptionCodes.NULL);
         }
         if (ticket.getCustomerId() < 0 || ticket.getCustomerId() >= ticketRepo.read().size()) {
             throw new TicketException(TicketExceptionCodes.TICKET_CUSTOMER_IS_INVALID);
@@ -129,9 +117,6 @@ public class ShopServiceImpl implements ShopService {
         return ticketRepo.read(ticketId);
     }
 
-    /**
-     * For price calculation of imported tickets.
-     */
     @Override
     public void calculatePrice() {
         for (Ticket ticket : ticketRepo.read()) {
@@ -139,14 +124,6 @@ public class ShopServiceImpl implements ShopService {
         }
     }
 
-    /**
-     * Calculates an Itinerary's final price.
-     *
-     * CREDIT_CARD: -10% to basic price. BUSINESS: -10% to basic price.
-     * INDIVIDUAL: +20% to basic price. (the price changes are cumulative)
-     *
-     * @param ticket as Ticket
-     */
     @Override
     public void calculatePrice(Ticket ticket) {
         Customer customer = customerRepo.read(ticket.getCustomerId());
@@ -184,7 +161,30 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<StatisticalDtoMaxTicketCustomers> calculateMaxTicketCustomers() {
+    public List<StatisticalDtoAirports> calculateOfferedItinerariesPerAirport() {
+        List<StatisticalDtoAirports> airportList = new ArrayList<>();
+        for (AirportCode airportCode : AirportCode.values()) {
+            StatisticalDtoAirports dto = new StatisticalDtoAirports();
+            dto.setAirportCode(airportCode);
+            int departureCount = 0;
+            int destinationCount = 0;
+            for (Ticket ticket : ticketRepo.read()) {
+                if (itineraryRepo.read(ticket.getItineraryId()).getDeparture().equals(airportCode)) {
+                    departureCount++;
+                }
+                if (itineraryRepo.read(ticket.getItineraryId()).getDestination().equals(airportCode)) {
+                    destinationCount++;
+                }
+            }
+            dto.setDepartureCount(departureCount);
+            dto.setDestinationCount(destinationCount);
+            airportList.add(dto);
+        }
+        return airportList;
+    }
+
+    @Override
+    public List<StatisticalDtoMaxTicketCustomers> findMaxTicketCustomers() {
         List<StatisticalDtoMaxTicketCustomers> dtoList = new ArrayList<>();
         int maxTickets = -1;
         for (Customer customer : customerRepo.read()) {
@@ -223,29 +223,6 @@ public class ShopServiceImpl implements ShopService {
             }
         }
         return dtoList;
-    }
-
-    @Override
-    public List<StatisticalDtoAirports> calculateOfferedItinerariesPerAirport() {
-        List<StatisticalDtoAirports> airportList = new ArrayList<>();
-        for (AirportCode airportCode : AirportCode.values()) {
-            StatisticalDtoAirports dto = new StatisticalDtoAirports();
-            dto.setAirportCode(airportCode);
-            int departureCount = 0;
-            int destinationCount = 0;
-            for (Ticket ticket : ticketRepo.read()) {
-                if (itineraryRepo.read(ticket.getItineraryId()).getDeparture().equals(airportCode)) {
-                    departureCount++;
-                }
-                if (itineraryRepo.read(ticket.getItineraryId()).getDestination().equals(airportCode)) {
-                    destinationCount++;
-                }
-            }
-            dto.setDepartureCount(departureCount);
-            dto.setDestinationCount(destinationCount);
-            airportList.add(dto);
-        }
-        return airportList;
     }
 
     @Override

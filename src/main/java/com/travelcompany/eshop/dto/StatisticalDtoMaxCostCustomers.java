@@ -3,6 +3,7 @@ package com.travelcompany.eshop.dto;
 import java.math.BigDecimal;
 
 public class StatisticalDtoMaxCostCustomers {
+
     private String name;
     private BigDecimal maxCost;
 
@@ -21,6 +22,5 @@ public class StatisticalDtoMaxCostCustomers {
     public void setMaxCost(BigDecimal maxCost) {
         this.maxCost = maxCost;
     }
-    
-    
+
 }

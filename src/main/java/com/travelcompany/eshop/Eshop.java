@@ -16,7 +16,6 @@ import com.travelcompany.eshop.services.IoService;
 import com.travelcompany.eshop.services.IoServiceImpl;
 import com.travelcompany.eshop.services.ShopService;
 import com.travelcompany.eshop.services.ShopServiceImpl;
-import com.travelcompany.eshop.util.DataImport;
 
 public class Eshop {
 
@@ -26,10 +25,6 @@ public class Eshop {
         ItineraryRepository itineraryRepo = new ItineraryRepositoryImpl();
         TicketRepository ticketRepo = new TicketRepositoryImpl();
 
-//        DataImport dataImport = new DataImport(customerRepo, itineraryRepo, ticketRepo);
-//        dataImport.importCustomers();
-//        dataImport.importItineraries();
-//        dataImport.importTickets();
         ShopService shopService = new ShopServiceImpl(customerRepo, itineraryRepo, ticketRepo);
         IoService ioService = new IoServiceImpl(customerRepo, itineraryRepo, ticketRepo);
 
@@ -37,18 +32,24 @@ public class Eshop {
             ioService.readCustomerFromCsv("data/customers.csv");
             ioService.readItineraryFromCsv("data/itineraries.csv");
             ioService.readTicketFromCsv("data/tickets.csv");
-            //to calculate the payment amount for every imported ticket
         } catch (CustomerException | ItineraryException | TicketException ex) {
             ex.printStackTrace();
         }
 
         shopService.calculatePrice();
 
-//        System.out.println("---------------------");
-//        System.out.println("IMPORTED DATA PRINTING");
-//        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchCustomer()));
-//        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchItinerary()));
-//        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchTicket()));
+        System.out.println("---------------------");
+        System.out.println("IMPORTED DATA PRINTING");
+
+        System.out.println("---------------------");
+        System.out.println("CUSTOMERS");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchCustomer()));
+        System.out.println("---------------------");
+        System.out.println("ITINERARIES");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchItinerary()));
+        System.out.println("---------------------");
+        System.out.println("TICKETS");
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.searchTicket()));
 
         System.out.println("---------------------");
         System.out.println("TOTAL NUMBER OF TICKETS AND TICKET COST");
@@ -60,7 +61,8 @@ public class Eshop {
 
         System.out.println("---------------------");
         System.out.println("CUSTOMERS WITH MAX TICKETS");
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateMaxTicketCustomers()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.findMaxTicketCustomers()));
+        System.out.println("---------------------");
         System.out.println("CUSTOMERS WITH MAX COST");
         System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateMaxCostCustomers()));
 

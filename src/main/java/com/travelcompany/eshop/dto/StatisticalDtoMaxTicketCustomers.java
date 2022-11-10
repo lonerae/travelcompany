@@ -1,6 +1,7 @@
 package com.travelcompany.eshop.dto;
 
 public class StatisticalDtoMaxTicketCustomers {
+
     private String name;
     private int maxTickets;
 
@@ -19,6 +20,5 @@ public class StatisticalDtoMaxTicketCustomers {
     public void setMaxTickets(int maxTickets) {
         this.maxTickets = maxTickets;
     }
-    
-    
+
 }

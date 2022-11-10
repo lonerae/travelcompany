@@ -51,7 +51,7 @@ public class IoServiceImpl implements IoService {
                         + customer.getCategory());
             }
         } catch (FileNotFoundException ex) {
-            throw new CustomerException(CustomerExceptionCodes.CUSTOMER_FILE_NOT_ACCESSIBLE);
+            throw new CustomerException(CustomerExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
     }
 
@@ -75,11 +75,11 @@ public class IoServiceImpl implements IoService {
                     customerRepo.create(customer);
                     rowsRead++;
                 } catch (NumberFormatException e) {
-                    throw new CustomerException(CustomerExceptionCodes.CUSTOMER_FILE_NOT_ACCESSIBLE);
+                    throw new CustomerException(CustomerExceptionCodes.INVALID_DATA);
                 }
             }
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+            throw new CustomerException(CustomerExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
 
         return rowsRead;
@@ -101,12 +101,12 @@ public class IoServiceImpl implements IoService {
                         + (itinerary.getDepartureDate().getDate()) + " "
                         + (itinerary.getDepartureDate().getHours()) + ":"
                         + (itinerary.getDepartureDate().getMinutes()) + ","
-                        + Itinerary.AIRLINE + ","
+                        + itinerary.getAirline() + ","
                         + itinerary.getPrice()
                 );
             }
         } catch (FileNotFoundException ex) {
-            throw new ItineraryException(ItineraryExceptionCodes.ITINERARY_FILE_NOT_ACCESSIBLE);
+            throw new ItineraryException(ItineraryExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
     }
 
@@ -134,15 +134,16 @@ public class IoServiceImpl implements IoService {
                             Integer.parseInt(timeParts[0]),
                             Integer.parseInt(timeParts[1])
                     ));
+                    itinerary.setAirline(words[4].trim());
                     itinerary.setPrice(BigDecimal.valueOf(Double.parseDouble(words[5])));
                     itineraryRepo.create(itinerary);
                     rowsRead++;
                 } catch (NumberFormatException e) {
-                    throw new ItineraryException(ItineraryExceptionCodes.ITINERARY_FILE_NOT_ACCESSIBLE);
+                    throw new ItineraryException(ItineraryExceptionCodes.INVALID_DATA);
                 }
             }
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+            throw new ItineraryException(ItineraryExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
         return rowsRead;
     }
@@ -162,15 +163,15 @@ public class IoServiceImpl implements IoService {
                         + ticket.getPaymentAmount());
             }
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+            throw new TicketException(TicketExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
     }
 
     @Override
     public int readTicketFromCsv(String fileName) throws TicketException {
         File file = new File(fileName);
-        int rowsRead=0;
-        try (Scanner scanner = new Scanner(file)) {
+        int rowsRead = 0;
+        try ( Scanner scanner = new Scanner(file)) {
             scanner.nextLine();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -186,11 +187,11 @@ public class IoServiceImpl implements IoService {
                     customerRepo.read(ticket.getCustomerId()).getTicketList().add(ticket);
                     rowsRead++;
                 } catch (NumberFormatException e) {
-                    throw new TicketException(TicketExceptionCodes.TICKET_FILE_NOT_ACCESSIBLE);
+                    throw new TicketException(TicketExceptionCodes.INVALID_DATA);
                 }
             }
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+            throw new TicketException(TicketExceptionCodes.FILE_NOT_ACCESSIBLE);
         }
         return rowsRead;
     }

@@ -56,7 +56,7 @@ public class Customer extends PersistentClass {
     public void setCategory(CustomerCategory category) {
         this.category = category;
     }
-    
+
     public List<Ticket> getTicketList() {
         return ticketList;
     }
