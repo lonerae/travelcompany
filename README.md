@@ -13,8 +13,8 @@ After execution, the application will print
 - the total number and total cost of all tickets purchased
 - the number of itineraries offered to customers, per destination and per departure
 - the name(s) of the customer(s) with most tickets purchased and the number of those tickets
-- the name(s) of the customer(s) with the largest cost of purchase and the amount of that cost and
-- the name(s) of the customer(s) who have not purchased any tickets yet
+- the name(s) of the customer(s) with the largest cost of purchase and the amount of that cost
+- the name(s) of the customer(s) who have not purchased any tickets yet and
 - the details of a successful hypothetical ticket purchase
 
 in that order and as JSON.
