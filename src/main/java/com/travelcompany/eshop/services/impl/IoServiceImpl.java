@@ -1,4 +1,4 @@
-package com.travelcompany.eshop.services;
+package com.travelcompany.eshop.services.impl;
 
 import com.travelcompany.eshop.enums.AirportCode;
 import com.travelcompany.eshop.enums.CustomerCategory;
@@ -15,6 +15,7 @@ import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
+import com.travelcompany.eshop.services.IoService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
