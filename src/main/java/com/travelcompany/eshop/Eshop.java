@@ -13,9 +13,11 @@ import com.travelcompany.eshop.repository.impl.CustomerRepositoryImpl;
 import com.travelcompany.eshop.repository.impl.ItineraryRepositoryImpl;
 import com.travelcompany.eshop.repository.impl.TicketRepositoryImpl;
 import com.travelcompany.eshop.services.IoService;
-import com.travelcompany.eshop.services.IoServiceImpl;
+import com.travelcompany.eshop.services.impl.IoServiceImpl;
 import com.travelcompany.eshop.services.ShopService;
-import com.travelcompany.eshop.services.ShopServiceImpl;
+import com.travelcompany.eshop.services.impl.ShopServiceImpl;
+
+import static java.io.File.separator;
 
 public class Eshop {
 
@@ -29,9 +31,9 @@ public class Eshop {
         IoService ioService = new IoServiceImpl(customerRepo, itineraryRepo, ticketRepo);
 
         try {
-            ioService.readCustomerFromCsv("data/customers.csv");
-            ioService.readItineraryFromCsv("data/itineraries.csv");
-            ioService.readTicketFromCsv("data/tickets.csv");
+            ioService.readCustomerFromCsv("data" + separator + "customers.csv");
+            ioService.readItineraryFromCsv("data" + separator + "itineraries.csv");
+            ioService.readTicketFromCsv("data" + separator + "tickets.csv");
         } catch (CustomerException | ItineraryException | TicketException ex) {
             System.out.println(ex.getMessage());
         }
@@ -71,9 +73,9 @@ public class Eshop {
         System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(shopService.calculateZeroTicketCustomers()));
 
         try {
-            ioService.saveCustomersToCsv("data/customers.csv");
-            ioService.saveItineraryToCsv("data/itineraries.csv");
-            ioService.saveTicketToCsv("data/tickets.csv");
+            ioService.saveCustomersToCsv("data" + separator + "customers.csv");
+            ioService.saveItineraryToCsv("data" + separator + "itineraries.csv");
+            ioService.saveTicketToCsv("data" + separator + "tickets.csv");
         } catch (CustomerException | ItineraryException | TicketException ex) {
             System.out.println(ex.getMessage());
         }
