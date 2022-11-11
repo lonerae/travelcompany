@@ -1,4 +1,4 @@
-package com.travelcompany.eshop.services.impl;
+package com.travelcompany.eshop.services;
 
 import com.travelcompany.eshop.dto.StatisticalDtoAirports;
 import com.travelcompany.eshop.dto.StatisticalDtoMaxCostCustomers;
@@ -20,7 +20,6 @@ import com.travelcompany.eshop.model.Ticket;
 import com.travelcompany.eshop.repository.CustomerRepository;
 import com.travelcompany.eshop.repository.ItineraryRepository;
 import com.travelcompany.eshop.repository.TicketRepository;
-import com.travelcompany.eshop.services.ShopService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

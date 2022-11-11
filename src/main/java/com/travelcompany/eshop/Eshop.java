@@ -13,9 +13,9 @@ import com.travelcompany.eshop.repository.impl.CustomerRepositoryImpl;
 import com.travelcompany.eshop.repository.impl.ItineraryRepositoryImpl;
 import com.travelcompany.eshop.repository.impl.TicketRepositoryImpl;
 import com.travelcompany.eshop.services.IoService;
-import com.travelcompany.eshop.services.impl.IoServiceImpl;
+import com.travelcompany.eshop.services.IoServiceImpl;
 import com.travelcompany.eshop.services.ShopService;
-import com.travelcompany.eshop.services.impl.ShopServiceImpl;
+import com.travelcompany.eshop.services.ShopServiceImpl;
 
 public class Eshop {
 
